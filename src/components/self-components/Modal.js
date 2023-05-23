@@ -1,8 +1,8 @@
 function Modal({ isVisible, closeModal, content }) {
-  if (!isVisible) return null;
+  if (!isVisible) return;
 
   return (
-    <div>
+    <div className="modal-wrapper">
       <div className="modal-container">
         <div className="modal-content">{content}</div>
         <button className="modal-close-button" onClick={closeModal}>
