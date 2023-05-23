@@ -1,0 +1,19 @@
+.container {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, var(--card_width));
+  grid-auto-rows: 10px;
+  justify-content: center;
+}
+
+.card-small {
+  grid-row-end: span var(--card_small);
+}
+
+.card-medium {
+  grid-row-end: span var(--card_medium);
+}
+
+.card-large {
+  grid-row-end: span var(--card_large);
+}

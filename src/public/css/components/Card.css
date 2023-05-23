@@ -1,0 +1,17 @@
+.card-container {
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  margin: 15px 10px;
+}
+
+.card-image-container,
+.card-image {
+  height: 100%;
+}
+
+.card-image {
+  width: 100%;
+  border-radius: var(--card_border_radius);
+}
