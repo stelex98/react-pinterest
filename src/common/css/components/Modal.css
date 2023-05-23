@@ -1,0 +1,44 @@
+.modal-wrapper {
+  position: relative;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-width: 700px;
+  width: 100%;
+
+  background-color: #ffffff;
+
+  border-radius: 10px;
+
+  padding: 15px;
+  z-index: 2;
+}
+
+.modal-overlay {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+
+  pointer-events: auto;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  position: absolute;
+  right: 10px;
+  top: 0;
+
+  font-size: 20px;
+}
