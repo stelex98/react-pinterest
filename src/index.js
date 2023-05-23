@@ -1,5 +1,5 @@
 // css block
-import "./public/css/index";
+import "./common/css/index";
 
 // components block
 import React from "react";
