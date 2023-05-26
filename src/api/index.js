@@ -4,17 +4,17 @@ const allCards = [
   {
     id: 1,
     img: "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
-    title: "Amazing title",
+    title: "Waakye Is the Meanest Street Food Alive",
   },
   {
     id: 2,
     img: "https://i.pinimg.com/236x/91/24/94/9124949c76f4ae241c2595aebf4fc86c.jpg",
-    title: "Amazing title",
+    title: "Waakye Is the Meanest Street Food Alive",
   },
   {
     id: 3,
     img: "https://i.pinimg.com/236x/2b/cf/ce/2bcfce0099627ec0833383ddc6d635df.jpg",
-    title: "Amazing title",
+    title: "Waakye Is the Meanest Street Food Alive",
   },
   {
     id: 4,
