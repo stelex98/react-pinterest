@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMemo } from "react";
+import api from "../api/index";
 
 import Card from "./self-components/Card";
 import Comments from "./self-components/Comments";
@@ -12,20 +13,20 @@ function Layout({ cards }) {
 
   useEffect(() => {
     // Double twice, why?
-    console.log("activeCardId is changed");
-
     let content = null;
 
     if (activeCardId) {
-      content = {
-        img: "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
-        title: `Title card with id ${activeCardId}`,
-        subTitle: "Subtitle",
-        comments: [],
-      };
-    }
+      api.getComments(activeCardId).then((cardDetails) => {
+        content = {
+          img: "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
+          title: cardDetails.title,
+          subTitle: cardDetails.body,
+          comments: [],
+        };
 
-    setCardContent(content);
+        setCardContent(content);
+      });
+    }
   }, [activeCardId]);
 
   const contentTemplate = (
@@ -78,14 +79,14 @@ function Layout({ cards }) {
       3: "card-large",
     };
 
-    return cards.map(({ id, img, title }) => {
+    return cards.map(({ id, url }) => {
       const randomIndex = Math.ceil(Math.random() * 3);
       const cardType = cardTypeConfig[randomIndex];
 
       return (
         <Card
           key={id}
-          config={{ id, cardType, img, title }}
+          config={{ id, cardType, url }}
           onClick={handleCardClick}
         />
       );
