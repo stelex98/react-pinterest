@@ -1,5 +1,6 @@
 function Card({ config, onClick }) {
-  const { id, img, title, cardType } = config;
+  const { id, img, cardType } = config;
+
   const handleClick = () => {
     onClick(id);
   };
@@ -8,9 +9,6 @@ function Card({ config, onClick }) {
     <div className={`${cardType} card-container`} onClick={handleClick}>
       <div className="card-image-container">
         <img className="card-image" src={img} alt="Alt text" />
-      </div>
-      <div>
-        <span className="card-title">{title}</span>
       </div>
     </div>
   );

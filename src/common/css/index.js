@@ -4,5 +4,6 @@ import "./components/Layout.css";
 import "./components/Card.css";
 import "./components/Modal.css";
 import "./components/CardContent.css";
+import "./components/Comments.css";
 
 import "./base/variables.css";

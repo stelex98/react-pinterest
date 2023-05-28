@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useMemo } from "react";
 
 import Card from "./self-components/Card";
+import Comments from "./self-components/Comments";
 import Modal from "./self-components/Modal";
 
 function Layout({ cards }) {
@@ -42,12 +43,20 @@ function Layout({ cards }) {
           <span className="modal-subtitle">{cardContent?.subTitle}</span>
         </div>
 
-        <div className="content-modal-comments-container">
-          Comments:
-          <div>1</div>
-          <div>1</div>
-          <div>1</div>
-        </div>
+        <Comments
+          comments={[
+            {
+              profileImg:
+                "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
+              text: "Some comment here",
+            },
+            {
+              profileImg:
+                "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
+              text: "Some second comment here",
+            },
+          ]}
+        />
       </div>
     </div>
   );
