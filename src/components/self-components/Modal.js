@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Loader from "./Loader";
 
 function Modal({ isVisible, isLoading, closeModal, content }) {
@@ -6,6 +7,17 @@ function Modal({ isVisible, isLoading, closeModal, content }) {
     transition: "all .2s",
     visibility: !isVisible ? "hidden" : "visible",
   };
+
+  useEffect(() => {
+    if (isVisible) {
+      /* Remove possibility to scroll in case modal is opened */
+      document.body.style.overflow = "hidden";
+
+      return;
+    }
+
+    document.body.style.overflow = "unset";
+  }, [isVisible]);
 
   const visibleContent = isLoading ? (
     <div className="loader-container">
@@ -22,13 +34,13 @@ function Modal({ isVisible, isLoading, closeModal, content }) {
   );
 
   return (
-    <div className="modal-wrapper" style={visibilityAnimation}>
+    <div className="modal-wrapper modal-open" style={visibilityAnimation}>
       <div className="modal-container">
         {visibleContent}
 
         {closeButton}
       </div>
-      <div className="modal-overlay" />
+      <div className="modal-overlay" onClick={closeModal} />
     </div>
   );
 }
