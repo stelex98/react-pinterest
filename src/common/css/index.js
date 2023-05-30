@@ -7,4 +7,6 @@ import "./components/Loader.css";
 import "./components/CardContent.css";
 import "./components/Comments.css";
 
+import "./components/skeleton/index";
+
 import "./base/variables.css";

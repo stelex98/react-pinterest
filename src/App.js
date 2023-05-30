@@ -1,26 +1,30 @@
 import Layout from "./components/Layout";
+import SkeletonLayout from "./components/self-components/skeleton/SkeletonLayout";
+
 import api from "./api/index";
+
 import { useEffect, useState } from "react";
 
 export default function MyApp() {
   const [allCards, setAllCards] = useState([]);
+  const [isLoading, setLoadingStatus] = useState([]);
 
   // WTF with mounted?! and double calls
   useEffect(() => {
-    let mounted = true;
+    setLoadingStatus(true);
 
-    api.getAllCards().then((items) => {
-      if (mounted) {
-        setAllCards(items);
-      }
-    });
+    const getAllCards = async () => {
+      const cards = await api.getAllCards();
 
-    return () => (mounted = false);
+      setAllCards(cards);
+
+      setLoadingStatus(false);
+    };
+
+    getAllCards();
   }, []);
 
-  return (
-    <div className="root">
-      <Layout cards={allCards} />
-    </div>
-  );
+  const content = isLoading ? <SkeletonLayout /> : <Layout cards={allCards} />;
+
+  return <div className="root">{content}</div>;
 }
