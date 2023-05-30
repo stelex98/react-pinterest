@@ -1,5 +1,6 @@
 .modal-wrapper {
   position: relative;
+  transition: "all 2s";
 }
 
 .modal-container {

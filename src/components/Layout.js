@@ -83,8 +83,6 @@ function Layout({ cards }) {
   const closeModal = () => {
     setModalState(false);
     setCardId(null);
-    setCardContent(null);
-    setCardComments(null);
   };
 
   const cardItems = useMemo(() => {

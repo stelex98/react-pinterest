@@ -1,7 +1,11 @@
 import Loader from "./Loader";
 
 function Modal({ isVisible, isLoading, closeModal, content }) {
-  if (!isVisible) return;
+  const visibilityAnimation = {
+    opacity: !isVisible ? "0" : "1",
+    transition: "all .2s",
+    visibility: !isVisible ? "hidden" : "visible",
+  };
 
   const visibleContent = isLoading ? (
     <div className="loader-container">
@@ -18,7 +22,7 @@ function Modal({ isVisible, isLoading, closeModal, content }) {
   );
 
   return (
-    <div className="modal-wrapper">
+    <div className="modal-wrapper" style={visibilityAnimation}>
       <div className="modal-container">
         {visibleContent}
 
