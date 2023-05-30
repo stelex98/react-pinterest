@@ -11,15 +11,31 @@ function Layout({ cards }) {
   const [activeCardId, setCardId] = useState(null);
   const [cardContent, setCardContent] = useState(null);
   const [cardComments, setCardComments] = useState(null);
+  const [isLoading, setLoadingStatus] = useState(false);
 
   useEffect(() => {
     // Double twice, why?
     let content = null;
 
     if (activeCardId) {
+      setLoadingStatus(true);
+
       const cardImage = cards.find((card) => card?.id === activeCardId);
 
-      api.getCardContent(activeCardId).then((cardDetails) => {
+      Promise.all([
+        api.getCardContent(activeCardId),
+        api.getCardComments(activeCardId),
+      ]).then((values) => {
+        const cardContent = values[0];
+        const cardComments = values[1];
+
+        prepareCardContent(cardContent);
+        prepareCardComments(cardComments);
+
+        setLoadingStatus(false);
+      });
+
+      const prepareCardContent = (cardDetails) => {
         content = {
           img: cardImage?.url || "",
           title: cardDetails.title,
@@ -28,9 +44,9 @@ function Layout({ cards }) {
         };
 
         setCardContent(content);
-      });
+      };
 
-      api.getCardComments(activeCardId).then((cardComments) => {
+      const prepareCardComments = (cardComments) => {
         const preparedCardComments = cardComments.map((comment) => {
           return {
             profileImg:
@@ -40,7 +56,7 @@ function Layout({ cards }) {
         });
 
         setCardComments(preparedCardComments);
-      });
+      };
     }
   }, [activeCardId, cards]);
 
@@ -67,6 +83,8 @@ function Layout({ cards }) {
   const closeModal = () => {
     setModalState(false);
     setCardId(null);
+    setCardContent(null);
+    setCardComments(null);
   };
 
   const cardItems = useMemo(() => {
@@ -99,6 +117,7 @@ function Layout({ cards }) {
     <div>
       <Modal
         isVisible={activeCardId && isVisible}
+        isLoading={isLoading}
         closeModal={closeModal}
         content={contentTemplate}
       />
