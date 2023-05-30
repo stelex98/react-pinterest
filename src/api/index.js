@@ -11,10 +11,7 @@ const api = {
       console.error("Error when getting all cards: ", err.message);
     }
   },
-  // getCardContent: (id) => {
-  //   return allCards.find((cardItem) => cardItem.id === id);
-  // },
-  getComments: async (id) => {
+  getCardContent: async (id) => {
     try {
       const res = await fetch(
         `https://jsonplaceholder.typicode.com/posts/${id}`
@@ -25,6 +22,21 @@ const api = {
     } catch (err) {
       console.error(
         `Error when getting card details. Card id is: ${id}`,
+        err.message
+      );
+    }
+  },
+  getCardComments: async (id) => {
+    try {
+      const res = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${id}/comments`
+      );
+      const cardComments = await res.json();
+
+      return cardComments;
+    } catch (err) {
+      console.error(
+        `Error when getting card comments. Card id is: ${id}`,
         err.message
       );
     }

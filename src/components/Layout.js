@@ -10,15 +10,18 @@ function Layout({ cards }) {
   const [isVisible, setModalState] = useState(false);
   const [activeCardId, setCardId] = useState(null);
   const [cardContent, setCardContent] = useState(null);
+  const [cardComments, setCardComments] = useState(null);
 
   useEffect(() => {
     // Double twice, why?
     let content = null;
 
     if (activeCardId) {
-      api.getComments(activeCardId).then((cardDetails) => {
+      const cardImage = cards.find((card) => card?.id === activeCardId);
+
+      api.getCardContent(activeCardId).then((cardDetails) => {
         content = {
-          img: "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
+          img: cardImage?.url || "",
           title: cardDetails.title,
           subTitle: cardDetails.body,
           comments: [],
@@ -26,8 +29,20 @@ function Layout({ cards }) {
 
         setCardContent(content);
       });
+
+      api.getCardComments(activeCardId).then((cardComments) => {
+        const preparedCardComments = cardComments.map((comment) => {
+          return {
+            profileImg:
+              "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
+            text: comment.body,
+          };
+        });
+
+        setCardComments(preparedCardComments);
+      });
     }
-  }, [activeCardId]);
+  }, [activeCardId, cards]);
 
   const contentTemplate = (
     <div className="content-modal-container">
@@ -44,20 +59,7 @@ function Layout({ cards }) {
           <span className="modal-subtitle">{cardContent?.subTitle}</span>
         </div>
 
-        <Comments
-          comments={[
-            {
-              profileImg:
-                "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
-              text: "Some comment here",
-            },
-            {
-              profileImg:
-                "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
-              text: "Some second comment here",
-            },
-          ]}
-        />
+        <Comments comments={cardComments} />
       </div>
     </div>
   );
