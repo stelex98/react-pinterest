@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import dataFetch from "../api/index";
 
@@ -8,12 +8,46 @@ import Modal from "./self-components/Modal";
 
 const { getCardContent, getCardComments } = dataFetch();
 
-function Layout({ cards }) {
+function Layout({ cards, getCardsBySpecificPage }) {
   const [isVisible, setModalState] = useState(false);
   const [activeCardId, setCardId] = useState(null);
   const [cardContent, setCardContent] = useState(null);
   const [cardComments, setCardComments] = useState(null);
   const [isLoading, setLoadingStatus] = useState(false);
+  const [lastElement, setLastElement] = useState(null);
+
+  let currentLoadedpage = 1;
+
+  const observer = useRef(
+    new IntersectionObserver(
+      (entries) => {
+        const element = entries[0];
+
+        if (element.isIntersecting) {
+          currentLoadedpage += 1;
+          getCardsBySpecificPage(currentLoadedpage);
+        }
+      },
+      {
+        rootMargin: "30px",
+      }
+    )
+  );
+
+  useEffect(() => {
+    const currentElement = lastElement;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastElement]);
 
   useEffect(() => {
     let content = null;
@@ -109,17 +143,25 @@ function Layout({ cards }) {
       3: "card-large",
     };
 
-    return cards.map(({ id, url }) => {
+    return cards.map(({ id, url }, index) => {
       const randomIndex = Math.ceil(Math.random() * 3);
       const cardType = cardTypeConfig[randomIndex];
 
-      return (
+      const isLastElement = index === cards.length - 1;
+
+      const cardsContent = isLastElement ? (
+        <div key={index} ref={setLastElement}>
+          <Card config={{ id, cardType, url }} onClick={handleCardClick} />
+        </div>
+      ) : (
         <Card
-          key={id}
+          key={index}
           config={{ id, cardType, url }}
           onClick={handleCardClick}
         />
       );
+
+      return cardsContent;
     });
   }, [cards]);
 

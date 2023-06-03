@@ -13,6 +13,18 @@ const api = {
       console.error("Error when getting all cards: ", err.message);
     }
   },
+  getCardsByPage: async (page) => {
+    try {
+      const res = await fetch(
+        `https://jsonplaceholder.typicode.com/albums/${page}/photos`
+      );
+      const images = await res.json();
+
+      return images;
+    } catch (err) {
+      console.error(`Error when getting cards for ${page} page: `, err.message);
+    }
+  },
   getCardContent: async (id) => {
     try {
       const res = await fetch(

@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 function Card({ config, onClick }) {
   const { id, url, cardType } = config;
 
@@ -17,4 +19,4 @@ function Card({ config, onClick }) {
   );
 }
 
-export default Card;
+export default memo(Card);
