@@ -1,3 +1,5 @@
+import statusConstants from "../constants/statusConstants";
+
 const api = {
   getAllCards: async () => {
     try {
@@ -39,8 +41,52 @@ const api = {
         `Error when getting card comments. Card id is: ${id}`,
         err.message
       );
+
+      return err;
     }
   },
 };
 
-export default api;
+// Adds wrapper with read() function
+const wrapPromise = (promise) => {
+  let status = statusConstants.PENDING;
+  let result;
+
+  const suspend = promise().then(
+    (res) => {
+      status = statusConstants.SUCCESS;
+      result = res;
+    },
+    (err) => {
+      status = statusConstants.ERROR;
+      result = err;
+    }
+  );
+
+  return {
+    read() {
+      const config = {
+        pending: () => {
+          throw suspend;
+        },
+        error: () => {
+          throw result;
+        },
+        success: () => {
+          return result;
+        },
+      };
+
+      return config[status]();
+    },
+  };
+};
+
+const dataFetch = () => {
+  return {
+    ...api,
+    getAllCards: wrapPromise(api.getAllCards),
+  };
+};
+
+export default dataFetch;

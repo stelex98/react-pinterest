@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useMemo } from "react";
-import api from "../api/index";
+import dataFetch from "../api/index";
 
 import Card from "./self-components/Card";
 import Comments from "./self-components/Comments";
 import Modal from "./self-components/Modal";
+
+const { getCardContent, getCardComments } = dataFetch();
 
 function Layout({ cards }) {
   const [isVisible, setModalState] = useState(false);
@@ -22,8 +24,8 @@ function Layout({ cards }) {
       const cardImage = cards.find((card) => card?.id === activeCardId);
 
       Promise.allSettled([
-        api.getCardContent(activeCardId),
-        api.getCardComments(activeCardId),
+        getCardContent(activeCardId),
+        getCardComments(activeCardId),
       ]).then((values) => {
         const cardContent = values[0];
         const cardComments = values[1]?.value || [];
