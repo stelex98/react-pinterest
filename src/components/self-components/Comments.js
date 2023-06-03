@@ -3,7 +3,7 @@ function Comments({ comments }) {
 
   const commentsArr = comments.map((comment) => {
     return (
-      <div className="comment-container" key={comment.text}>
+      <div className="comment-container" key={comment?.text}>
         <div className="profile-image-container">
           <img
             className="profile-image"

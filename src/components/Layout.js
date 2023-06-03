@@ -14,7 +14,6 @@ function Layout({ cards }) {
   const [isLoading, setLoadingStatus] = useState(false);
 
   useEffect(() => {
-    // Double twice, why?
     let content = null;
 
     if (activeCardId) {
@@ -22,14 +21,25 @@ function Layout({ cards }) {
 
       const cardImage = cards.find((card) => card?.id === activeCardId);
 
-      Promise.all([
+      Promise.allSettled([
         api.getCardContent(activeCardId),
         api.getCardComments(activeCardId),
       ]).then((values) => {
         const cardContent = values[0];
-        const cardComments = values[1];
+        const cardComments = values[1]?.value || [];
 
-        prepareCardContent(cardContent);
+        if (cardContent?.reason) {
+          console.error(
+            `Card conent is empty or request has not been passed/ Content status: ${cardContent.status}, content reason: ${cardContent.reason}`
+          );
+
+          setLoadingStatus(false);
+          setModalState(false);
+
+          return;
+        }
+
+        prepareCardContent(cardContent.value);
         prepareCardComments(cardComments);
 
         setLoadingStatus(false);
@@ -112,7 +122,7 @@ function Layout({ cards }) {
   }, [cards]);
 
   return (
-    <div>
+    <>
       <Modal
         isVisible={activeCardId && isVisible}
         isLoading={isLoading}
@@ -120,7 +130,7 @@ function Layout({ cards }) {
         content={contentTemplate}
       />
       <div className="container">{cardItems}</div>
-    </div>
+    </>
   );
 }
 
