@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import dataFetch from "../api/index";
 
-import Card from "./self-components/Card";
 import Comments from "./self-components/Comments";
 import Modal from "./self-components/Modal";
+import CardList from "./self-components/CardList";
 
 const { getCardContent, getCardComments } = dataFetch();
 
@@ -137,32 +137,13 @@ function Layout({ cards, getCardsBySpecificPage }) {
       setCardId(clickedCardId);
     };
 
-    const cardTypeConfig = {
-      1: "card-small",
-      2: "card-medium",
-      3: "card-large",
-    };
-
-    return cards.map(({ id, url }, index) => {
-      const randomIndex = Math.ceil(Math.random() * 3);
-      const cardType = cardTypeConfig[randomIndex];
-
-      const isLastElement = index === cards.length - 1;
-
-      const cardsContent = isLastElement ? (
-        <div key={index} ref={setLastElement}>
-          <Card config={{ id, cardType, url }} onClick={handleCardClick} />
-        </div>
-      ) : (
-        <Card
-          key={index}
-          config={{ id, cardType, url }}
-          onClick={handleCardClick}
-        />
-      );
-
-      return cardsContent;
-    });
+    return (
+      <CardList
+        cards={cards}
+        setLastElement={setLastElement}
+        handleCardClick={handleCardClick}
+      />
+    );
   }, [cards]);
 
   return (

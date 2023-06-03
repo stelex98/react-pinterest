@@ -1,8 +1,6 @@
 import { memo } from "react";
 
-function Card({ config, onClick }) {
-  const { id, url, cardType } = config;
-
+function Card({ id, url, cardType, onClick }) {
   const handleClick = () => {
     onClick(id);
   };
