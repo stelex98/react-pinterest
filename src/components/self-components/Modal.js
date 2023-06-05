@@ -1,23 +1,20 @@
-import { useEffect } from "react";
+import { createRef, useEffect } from "react";
+import tabComposable from "../../api/composables/useTabComposable";
+
 import Loader from "./Loader";
 
-function Modal({ isVisible, isLoading, closeModal, content }) {
-  const visibilityAnimation = {
-    opacity: !isVisible ? "0" : "1",
-    transition: "all .2s",
-    visibility: !isVisible ? "hidden" : "visible",
-  };
+const { initTabHandle, destroyTabHandle } = tabComposable();
+
+// When do I need to use destroyTabHandle?
+
+function Modal({ isLoading, closeModal, content }) {
+  // const modalContainer = useRef(); - cool behaviour
+  const modalContainer = createRef();
 
   useEffect(() => {
-    if (isVisible) {
-      /* Remove possibility to scroll in case modal is opened */
-      document.body.style.overflow = "hidden";
-
-      return;
-    }
-
-    document.body.style.overflow = "unset";
-  }, [isVisible]);
+    /* WHY? 3 times rendering */
+    initTabHandle(modalContainer?.current);
+  }, [modalContainer]);
 
   const visibleContent = isLoading ? (
     <div className="loader-container">
@@ -28,13 +25,13 @@ function Modal({ isVisible, isLoading, closeModal, content }) {
   );
 
   const closeButton = (
-    <button className="modal-close-button" onClick={closeModal}>
+    <button className="modal-close-button tab-element" onClick={closeModal}>
       &#10006;
     </button>
   );
 
   return (
-    <div className="modal-wrapper modal-open" style={visibilityAnimation}>
+    <div ref={modalContainer} className="modal-wrapper modal-open">
       <div className="modal-container">
         {visibleContent}
 

@@ -15,6 +15,7 @@ function Layout({ cards, getCardsBySpecificPage }) {
   const [cardComments, setCardComments] = useState(null);
   const [isLoading, setLoadingStatus] = useState(false);
   const [lastElement, setLastElement] = useState(null);
+  const [visibilityAnimation, setVisibilityAnimation] = useState(null);
 
   let currentLoadedpage = 1;
 
@@ -33,6 +34,29 @@ function Layout({ cards, getCardsBySpecificPage }) {
       }
     )
   );
+
+  useEffect(() => {
+    if (isVisible) {
+      /* Remove possibility to scroll in case modal is opened */
+      document.body.style.overflow = "hidden";
+
+      setVisibilityAnimation({
+        opacity: "1",
+        transition: "all .2s",
+        visibility: "visible",
+      });
+
+      return;
+    }
+
+    setVisibilityAnimation({
+      opacity: "0",
+      transition: "all .2s",
+      visibility: "hidden",
+    });
+
+    document.body.style.overflow = "unset";
+  }, [isVisible]);
 
   useEffect(() => {
     const currentElement = lastElement;
@@ -109,16 +133,20 @@ function Layout({ cards, getCardsBySpecificPage }) {
   const contentTemplate = (
     <div className="content-modal-container">
       <div className="content-modal-image-container">
-        <img
-          className="content-modal-image"
-          src={cardContent?.img}
-          alt="Text alt"
-        />
+        <div className="tab-element">
+          <img
+            className="content-modal-image"
+            src={cardContent?.img}
+            alt="Text alt"
+          />
+        </div>
       </div>
       <div className="content-modal-content">
         <div className="content-modal-text-container">
-          <h1 className="modal-title">{cardContent?.title}</h1>
-          <span className="modal-subtitle">{cardContent?.subTitle}</span>
+          <h1 className="modal-title tab-element">{cardContent?.title}</h1>
+          <span className="modal-subtitle tab-element">
+            {cardContent?.subTitle}
+          </span>
         </div>
 
         <Comments comments={cardComments} />
@@ -146,14 +174,19 @@ function Layout({ cards, getCardsBySpecificPage }) {
     );
   }, [cards]);
 
-  return (
-    <>
+  // TODO: Update modal animation for conditional rendering
+  const modalContent =
+    isVisible && activeCardId ? (
       <Modal
-        isVisible={activeCardId && isVisible}
         isLoading={isLoading}
         closeModal={closeModal}
         content={contentTemplate}
       />
+    ) : null;
+
+  return (
+    <>
+      <div style={visibilityAnimation}>{modalContent}</div>
       <div className="container">{cardItems}</div>
     </>
   );
