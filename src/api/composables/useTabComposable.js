@@ -42,7 +42,7 @@ function tabComposable() {
     if (!elements.length) return;
 
     for (let el of elements) {
-      el.setAttribute("tabindex", "-0");
+      el.setAttribute("tabindex", "0");
     }
   };
 
@@ -73,8 +73,6 @@ function tabComposable() {
       firstFocusableEl = getExtremeElements().firstFocusableEl;
       lastFocusableEl = getExtremeElements().lastFocusableEl;
 
-      console.log("The fist focusable element: ", firstFocusableEl);
-      console.log("The last focusable element: ", lastFocusableEl);
       console.log("All focusable elements: ", focusableElements);
 
       element.addEventListener("keydown", handleKeydownEvent);

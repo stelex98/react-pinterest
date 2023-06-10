@@ -1,20 +1,22 @@
-import { createRef, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 import tabComposable from "../../api/composables/useTabComposable";
 
 import Loader from "./Loader";
 
 const { initTabHandle, destroyTabHandle } = tabComposable();
 
-// When do I need to use destroyTabHandle?
-
 function Modal({ isLoading, closeModal, content }) {
-  // const modalContainer = useRef(); - cool behaviour
-  const modalContainer = createRef();
+  const modalContainer = useRef();
 
   useEffect(() => {
-    /* WHY? 3 times rendering */
-    initTabHandle(modalContainer?.current);
-  }, [modalContainer]);
+    if (!isLoading && content) {
+      initTabHandle(modalContainer?.current);
+    }
+
+    return () => {
+      destroyTabHandle();
+    };
+  }, [isLoading, content]);
 
   const visibleContent = isLoading ? (
     <div className="loader-container">
@@ -42,4 +44,4 @@ function Modal({ isLoading, closeModal, content }) {
   );
 }
 
-export default Modal;
+export default memo(Modal);
