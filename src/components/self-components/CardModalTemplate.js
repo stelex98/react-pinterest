@@ -6,9 +6,9 @@ const CardModalTemplate = ({ image, title, subTitle, comments }) => {
   return (
     <div className="content-modal-container">
       <div className="content-modal-image-container">
-        <div className="tab-element">
+        <a href="/" className="tab-element content-modal-image-wrapper">
           <img className="content-modal-image" src={image} alt="Text alt" />
-        </div>
+        </a>
       </div>
       <div className="content-modal-content">
         <div className="content-modal-text-container">

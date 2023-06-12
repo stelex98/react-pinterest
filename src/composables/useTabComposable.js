@@ -39,14 +39,6 @@ function useTabComposable() {
     }
   };
 
-  const addTabIndexToEachElement = (elements = []) => {
-    if (!elements.length) return;
-
-    for (let el of elements) {
-      el.setAttribute("tabindex", "0");
-    }
-  };
-
   const getExtremeElements = () => {
     return {
       firstFocusableEl: focusableElements[0],
@@ -69,9 +61,6 @@ function useTabComposable() {
 
         return;
       }
-
-      // Set up default behaviour for using .focus() method from js
-      addTabIndexToEachElement(focusableElements);
 
       firstFocusableEl = getExtremeElements().firstFocusableEl;
       lastFocusableEl = getExtremeElements().lastFocusableEl;

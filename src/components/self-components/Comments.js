@@ -4,13 +4,13 @@ function Comments({ comments }) {
   const commentsArr = comments.map((comment) => {
     return (
       <div className="comment-container" key={comment?.text}>
-        <div className="profile-image-container">
+        <a href="/" className="profile-image-container">
           <img
             className="profile-image"
             src={comment?.profileImg}
             alt="Profile icon"
           />
-        </div>
+        </a>
         <div className="profile-text-container">
           <span className="profile-text">{comment?.text}</span>
         </div>

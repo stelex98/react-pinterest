@@ -8,6 +8,10 @@
   max-width: 300px;
 }
 
+.content-modal-image-wrapper {
+  height: 100%;
+}
+
 .content-modal-content {
   display: flex;
   flex-direction: column;
