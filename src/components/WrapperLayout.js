@@ -8,6 +8,7 @@ const { getAllCards, getCardsByPage } = dataFetch();
 const WrapperLayout = () => {
   const [cards, setCards] = useState([]);
 
+  // Double call?
   const allCardsResponse = getAllCards.read();
 
   const getCardsBySpecificPage = async (page) => {
@@ -22,6 +23,7 @@ const WrapperLayout = () => {
 
   useEffect(() => {
     const extendedCardList = generateCardTypeForCardList(allCardsResponse);
+
     setCards(extendedCardList);
   }, [allCardsResponse]);
 

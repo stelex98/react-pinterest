@@ -1,11 +1,11 @@
 import { memo, useEffect, useRef } from "react";
-import tabComposable from "../../api/composables/useTabComposable";
+import useTabComposable from "../../composables/useTabComposable";
 
 import Loader from "./Loader";
 
-const { initTabHandle, destroyTabHandle } = tabComposable();
-
 function Modal({ isLoading, closeModal, content }) {
+  const { initTabHandle, destroyTabHandle } = useTabComposable();
+
   const modalContainer = useRef();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ function Modal({ isLoading, closeModal, content }) {
     return () => {
       destroyTabHandle();
     };
-  }, [isLoading, content]);
+  }, [isLoading, content, initTabHandle, destroyTabHandle]);
 
   const visibleContent = isLoading ? (
     <div className="loader-container">

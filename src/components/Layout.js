@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMemo } from "react";
+import useObserver from "../composables/useObserver";
+import cardContentPreparation from "../helpers/cardContentPreparation";
+import cardCommentsPreparation from "../helpers/cardCommentsPreparation";
 import dataFetch from "../api/index";
 
-import Comments from "./self-components/Comments";
+import CardModalTemplate from "./self-components/CardModalTemplate";
 import Modal from "./self-components/Modal";
 import CardList from "./self-components/CardList";
 
@@ -19,21 +22,10 @@ function Layout({ cards, getCardsBySpecificPage }) {
 
   let currentLoadedpage = 1;
 
-  const observer = useRef(
-    new IntersectionObserver(
-      (entries) => {
-        const element = entries[0];
-
-        if (element.isIntersecting) {
-          currentLoadedpage += 1;
-          getCardsBySpecificPage(currentLoadedpage);
-        }
-      },
-      {
-        rootMargin: "30px",
-      }
-    )
-  );
+  const { observer } = useObserver(() => {
+    currentLoadedpage += 1;
+    getCardsBySpecificPage(currentLoadedpage);
+  });
 
   useEffect(() => {
     if (isVisible) {
@@ -71,11 +63,9 @@ function Layout({ cards, getCardsBySpecificPage }) {
         currentObserver.unobserve(currentElement);
       }
     };
-  }, [lastElement]);
+  }, [lastElement, observer]);
 
   useEffect(() => {
-    let content = null;
-
     if (activeCardId) {
       setLoadingStatus(true);
 
@@ -99,60 +89,20 @@ function Layout({ cards, getCardsBySpecificPage }) {
           return;
         }
 
-        prepareCardContent(cardContent.value);
-        prepareCardComments(cardComments);
+        setCardContent(
+          cardContentPreparation.generateContentFormat(
+            cardContent.value,
+            cardImage
+          )
+        );
+        setCardComments(
+          cardCommentsPreparation.generateCommentsFormat(cardComments)
+        );
 
         setLoadingStatus(false);
       });
-
-      const prepareCardContent = (cardDetails) => {
-        content = {
-          img: cardImage?.url || "",
-          title: cardDetails.title,
-          subTitle: cardDetails.body,
-          comments: [],
-        };
-
-        setCardContent(content);
-      };
-
-      const prepareCardComments = (cardComments) => {
-        const preparedCardComments = cardComments.map((comment) => {
-          return {
-            profileImg:
-              "https://i.pinimg.com/236x/ae/b0/2f/aeb02fe5d0f294114aab9a0d5a05ec56.jpg",
-            text: comment.body,
-          };
-        });
-
-        setCardComments(preparedCardComments);
-      };
     }
   }, [activeCardId, cards]);
-
-  const contentTemplate = (
-    <div className="content-modal-container">
-      <div className="content-modal-image-container">
-        <div className="tab-element">
-          <img
-            className="content-modal-image"
-            src={cardContent?.img}
-            alt="Text alt"
-          />
-        </div>
-      </div>
-      <div className="content-modal-content">
-        <div className="content-modal-text-container">
-          <h1 className="modal-title tab-element">{cardContent?.title}</h1>
-          <span className="modal-subtitle tab-element">
-            {cardContent?.subTitle}
-          </span>
-        </div>
-
-        <Comments comments={cardComments} />
-      </div>
-    </div>
-  );
 
   const closeModal = () => {
     setModalState(false);
@@ -180,7 +130,14 @@ function Layout({ cards, getCardsBySpecificPage }) {
       <Modal
         isLoading={isLoading}
         closeModal={closeModal}
-        content={contentTemplate}
+        content={
+          <CardModalTemplate
+            image={cardContent?.img}
+            title={cardContent?.title}
+            subTitle={cardContent?.subTitle}
+            comments={cardComments}
+          />
+        }
       />
     ) : null;
 

@@ -1,11 +1,12 @@
-// WTF?? Why can not use be used as part of composable name here?
-function tabComposable() {
+function useTabComposable() {
   let focusableElements = [];
   let firstFocusableEl = null;
   let lastFocusableEl = null;
 
   const TAB_KEYCODE = 9;
   const KEY_NAME = "Tab";
+
+  let activeElement = null;
 
   const handleKeydownEvent = (event) => {
     const isTabPressed =
@@ -57,6 +58,8 @@ function tabComposable() {
     initTabHandle: (element = null) => {
       if (!!element) {
         focusableElements = element.querySelectorAll(".tab-element");
+
+        activeElement = element;
       }
 
       if (!focusableElements.length) {
@@ -77,12 +80,12 @@ function tabComposable() {
 
       element.addEventListener("keydown", handleKeydownEvent);
     },
-    destroyTabHandle: (element = null) => {
-      if (!element) return;
+    destroyTabHandle: () => {
+      if (!activeElement) return;
 
-      element.removeEventListener("keydown", handleKeydownEvent);
+      activeElement.removeEventListener("keydown", handleKeydownEvent);
     },
   };
 }
 
-export default tabComposable;
+export default useTabComposable;
