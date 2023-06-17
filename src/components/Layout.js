@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useMemo } from "react";
+
 import useObserver from "../composables/useObserver";
 import cardContentPreparation from "../helpers/cardContentPreparation";
 import cardCommentsPreparation from "../helpers/cardCommentsPreparation";
 import dataFetch from "../api/index";
 
-import CardModalTemplate from "./self-components/CardModalTemplate";
 import Modal from "./self-components/Modal";
 import CardList from "./self-components/CardList";
 
@@ -124,22 +124,15 @@ function Layout({ cards, getCardsBySpecificPage }) {
     );
   }, [cards]);
 
-  // TODO: Update modal animation for conditional rendering
-  const modalContent =
-    isVisible && activeCardId ? (
-      <Modal
-        isLoading={isLoading}
-        closeModal={closeModal}
-        content={
-          <CardModalTemplate
-            image={cardContent?.img}
-            title={cardContent?.title}
-            subTitle={cardContent?.subTitle}
-            comments={cardComments}
-          />
-        }
-      />
-    ) : null;
+  const isModalVisible = !isLoading && cardContent;
+
+  const modalContent = isModalVisible ? (
+    <Modal
+      content={cardContent}
+      comments={cardComments}
+      closeModal={closeModal}
+    />
+  ) : null;
 
   return (
     <>
